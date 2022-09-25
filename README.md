@@ -39,99 +39,235 @@
 
 ![image](https://user-images.githubusercontent.com/103308669/192157961-1c6db5c4-1b13-44b8-b909-6e7e55ac771b.png)
 
+![image](https://user-images.githubusercontent.com/103308669/192158003-a242c358-0a70-4c68-9567-2d6d8ee73221.png)
+
+- Для Unity в отчете привести скриншот вывода сообщения Hello World в консоль.
+
+![image](https://user-images.githubusercontent.com/103308669/192158021-035fbda7-2e8f-415c-8ff1-1d0aecd825c1.png)
+
+![image](https://user-images.githubusercontent.com/103308669/192158024-ce2f94fd-34d7-42f2-a15f-8b4d7a9236b3.png)
+
+## Задание 2
+### Пошагово выполнить каждый пункт раздела "ход работы" с описанием и примерами реализации задач.
+
+Ход работы:
+- Произвести подготовку данных для работы с алгоритмом линейной регрессии. 10 видов данных были установлены случайным образом, и данные находились в линейной зависимости. Данные преобразуются в формат массива, чтобы их можно было вычислить напрямую при использовании умножения и сложения.
 
 ```py
-
-In [ ]:
-#Import the required modules, numpy for calculation, and Matplotlib for drawing
 import numpy as np
 import matplotlib.pyplot as plt
-#This code is for jupyter Notebook only
-%matplotlib inline
 
-# define data, and change list to array
-x = [3,21,22,34,54,34,55,67,89,99]
+x = [3, 21 ,22, 34, 54, 34, 55, 67, 89, 99]
 x = np.array(x)
-y = [2,22,24,65,79,82,55,130,150,199]
+y = [2, 22, 24, 65, 79, 82, 55, 130, 150, 199]
 y = np.array(y)
 
-#Show the effect of a scatter plot
 plt.scatter(x,y)
-
 ```
+
+![image](https://user-images.githubusercontent.com/103308669/192158073-d5cb3ed5-3b1f-41b7-a476-c234ac721a51.png)
 
 - Определите связанные функции. Функция модели: определяет модель линейной регрессии wx+b. Функция потерь: функция потерь среднеквадратичной ошибки. Функция оптимизации: метод градиентного спуска для нахождения частных производных w и b.
 
+```py
+def model(a, b, x):
+  return a * x + b
+def loss_function(a, b, x, y):
+  num = len(x)
+  prediction = model (a,b,x)
+  return(0.5/num) * (np.square(prediction - y)).sum()
+def optimize(a, b, x, y):
+  num = len(x)
+  prediction = model (a,b,x)
+  da = (1.0/num)*((prediction - y)*x).sum()
+  db = (1.0/num)*((prediction - y).sum())
+  a = a - Lr*da
+  b = b - Lr*db
+  return a,b
+def iterate(a, b, x, y, times):
+  for i in range(times):
+    a,b = optimize(a, b, x, y)
+  return a,b
+```
 
-## Задание 2
-### Должна ли величина loss стремиться к нулю при изменении исходных данных? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ.
+![image](https://user-images.githubusercontent.com/103308669/192158097-d28d5220-2f48-4a22-b13d-f635bd9ccea0.png)
 
-- Перечисленные в этом туториале действия могут быть выполнены запуском на исполнение скрипт-файла, доступного [в репозитории](https://github.com/Den1sovDm1triy/hfss-scripting/blob/main/ScreatingSphereInAEDT.py).
-- Для запуска скрипт-файла откройте Ansys Electronics Desktop. Перейдите во вкладку [Automation] - [Run Script] - [Выберите файл с именем ScreatingSphereInAEDT.py из репозитория].
+- Начать итерацию.
+
+![image](https://user-images.githubusercontent.com/103308669/192158109-f79ad15a-913a-4e36-9b05-b00823d8217f.png)
+
+Шаг 1. Инициализация и модель итеративной оптимизации.
 
 ```py
+a = np.random.rand(1)
+print(a)
+b = np.random.rand(1)
+print(b)
+Lr = 0.000001
 
-import ScriptEnv
-ScriptEnv.Initialize("Ansoft.ElectronicsDesktop")
-oDesktop.RestoreWindow()
-oProject = oDesktop.NewProject()
-oProject.Rename("C:/Users/denisov.dv/Documents/Ansoft/SphereDIffraction.aedt", True)
-oProject.InsertDesign("HFSS", "HFSSDesign1", "HFSS Terminal Network", "")
-oDesign = oProject.SetActiveDesign("HFSSDesign1")
-oEditor = oDesign.SetActiveEditor("3D Modeler")
-oEditor.CreateSphere(
-	[
-		"NAME:SphereParameters",
-		"XCenter:="		, "0mm",
-		"YCenter:="		, "0mm",
-		"ZCenter:="		, "0mm",
-		"Radius:="		, "1.0770329614269mm"
-	], 
-)
-
+a,b = iterate(a,b,x,y,1)
+prediction = model (a,b,x)
+loss = loss_function(a,b,x,y)
+print(a,b,loss)
+plt.scatter(x,y)
+plt.plot(x,prediction)
 ```
+![image](https://user-images.githubusercontent.com/103308669/192158147-afed4867-eebf-4086-ae81-8879a484fc7b.png)
+
+Шаг 2.  На второй итерации отображаются значения параметров, значения потерь и эффекты визуализации после итерации.
+
+```py
+a,b = iterate(a,b,x,y,2)
+prediction = model (a,b,x)
+loss = loss_function(a,b,x,y)
+print(a,b,loss)
+plt.scatter(x,y)
+plt.plot(x,prediction)
+```
+
+![image](https://user-images.githubusercontent.com/103308669/192158171-dab6ecfc-a3a0-4f61-a567-c6edf2b59081.png)
+
+Шаг 3. Третья итерация показывает значения параметров, значения потерь и визуализацию после итерации.
+
+```py
+a,b = iterate(a,b,x,y,3)
+prediction = model (a,b,x)
+loss = loss_function(a,b,x,y)
+print(a,b,loss)
+plt.scatter(x,y)
+plt.plot(x,prediction)
+```
+
+![image](https://user-images.githubusercontent.com/103308669/192158203-0ffaff03-da4c-440b-9915-8411bc724cc0.png)
+
+Шаг 4. На четвертой итерации отображаются значения параметров, значения потерь и эффекты визуализации.
+
+```py
+a,b = iterate(a,b,x,y,4)
+prediction = model (a,b,x)
+loss = loss_function(a,b,x,y)
+print(a,b,loss)
+plt.scatter(x,y)
+plt.plot(x,prediction)
+```
+
+![image](https://user-images.githubusercontent.com/103308669/192158222-7e6b20cc-a1d0-4c39-b2f0-e7d5dda3f7ca.png)
+
+Шаг 5. Пятая итерация показывает значение параметра, значение потерь и эффект визуализации после итерации.
+
+```py
+a,b = iterate(a,b,x,y,5)
+prediction = model (a,b,x)
+loss = loss_function(a,b,x,y)
+print(a,b,loss)
+plt.scatter(x,y)
+plt.plot(x,prediction)
+```
+
+![image](https://user-images.githubusercontent.com/103308669/192158240-f47575ae-b6a4-484c-a3ea-302ae5817d91.png)
+
+Шаг 6. 10000-я итерация, показывающая занчения параметров, потери и визуализацию после итерации.
+
+```py
+a,b = iterate(a,b,x,y,10000)
+prediction = model (a,b,x)
+loss = loss_function(a,b,x,y)
+print(a,b,loss)
+plt.scatter(x,y)
+plt.plot(x,prediction)
+```
+
+![image](https://user-images.githubusercontent.com/103308669/192158256-145e4d0e-392b-4dda-b76c-75777d8484d5.png)
 
 ## Задание 3
-### Какова роль параметра Lr? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ. В качестве эксперимента можете изменить значение параметра.
-
-- Перечисленные в этом туториале действия могут быть выполнены запуском на исполнение скрипт-файла, доступного [в репозитории](https://github.com/Den1sovDm1triy/hfss-scripting/blob/main/ScreatingSphereInAEDT.py).
-- Для запуска скрипт-файла откройте Ansys Electronics Desktop. Перейдите во вкладку [Automation] - [Run Script] - [Выберите файл с именем ScreatingSphereInAEDT.py из репозитория].
+### Изучить код на Python и ответить на вопросы:
 
 ```py
+import numpy as np
+import matplotlib.pyplot as plt
 
-import ScriptEnv
-ScriptEnv.Initialize("Ansoft.ElectronicsDesktop")
-oDesktop.RestoreWindow()
-oProject = oDesktop.NewProject()
-oProject.Rename("C:/Users/denisov.dv/Documents/Ansoft/SphereDIffraction.aedt", True)
-oProject.InsertDesign("HFSS", "HFSSDesign1", "HFSS Terminal Network", "")
-oDesign = oProject.SetActiveDesign("HFSSDesign1")
-oEditor = oDesign.SetActiveEditor("3D Modeler")
-oEditor.CreateSphere(
-	[
-		"NAME:SphereParameters",
-		"XCenter:="		, "0mm",
-		"YCenter:="		, "0mm",
-		"ZCenter:="		, "0mm",
-		"Radius:="		, "1.0770329614269mm"
-	], 
-)
+x = [3, 21 ,22, 34, 54, 34, 55, 67, 89, 99]
+x = np.array(x)
+y = [2, 22, 24, 65, 79, 82, 55, 130, 150, 199]
+y = np.array(y)
 
+plt.scatter(x,y)
+
+def model(a, b, x):
+  return a * x + b
+def loss_function(a, b, x, y):
+  num = len(x)
+  prediction = model (a,b,x)
+  return(0.5/num) * (np.square(prediction - y)).sum()
+def optimize(a, b, x, y):
+  num = len(x)
+  prediction = model (a,b,x)
+  da = (1.0/num)*((prediction - y)*x).sum()
+  db = (1.0/num)*((prediction - y).sum())
+  a = a - Lr*da
+  b = b - Lr*db
+  return a,b
+def iterate(a, b, x, y, times):
+  for i in range(times):
+    a,b = optimize(a, b, x, y)
+  return a,b
+
+a = np.random.rand(1)
+print(a)
+b = np.random.rand(1)
+print(b)
+Lr = 0.000001
+
+a,b = iterate(a,b,x,y,1)
+prediction = model (a,b,x)
+loss = loss_function(a,b,x,y)
+print(a,b,loss)
+plt.scatter(x,y)
+plt.plot(x,prediction)
 ```
+
+- Должна ли величина loss стремиться к нулю при изменении исходных данных? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ.
+
+Loss может стремиться к нулю, если значения x и y стремятся к нулю и b = 0.
+
+```py
+a = np.random.rand(1)
+print(a)
+b = np.random.rand(1)
+print(b)
+Lr = 0.000001
+
+a,b = iterate(a,b,x,y,10000)
+prediction = model (a,b,x)
+loss = loss_function(a,0,x*10**(-30),y*10**(-30))
+print(a,b,loss)
+plt.scatter(x,y)
+plt.plot(x,prediction)
+```
+
+![image](https://user-images.githubusercontent.com/103308669/192158297-435d417a-af32-4bb6-99dd-b3efd1dbc256.png)
+
+- Какова роль параметра Lr? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ. В качестве эксперимента можете изменить значение параметра.
+
+Параметр Lr определяет точность графика. При увеличении параметра Lr, точки на графике выравниваются по оси ОХ. Так же этот параметр изменяет значения переменных a, b, loss. 
+
+```py
+a = np.random.rand(1)
+print(a)
+b = np.random.rand(1)
+print(b)
+Lr = 0.1
+
+a,b = iterate(a,b,x,y,1)
+prediction = model (a,b,x)
+loss = loss_function(a,b,x,y)
+print(a,b,loss)
+plt.scatter(x,y)
+plt.plot(x,prediction)
+```
+
+![image](https://user-images.githubusercontent.com/103308669/192158313-9a550b1f-64ad-4f3b-8a83-cca2bc3da77c.png)
 
 ## Выводы
 
-Абзац умных слов о том, что было сделано и что было узнано.
-
-| Plugin | README |
-| ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md][PlDb] |
-| GitHub | [plugins/github/README.md][PlGh] |
-| Google Drive | [plugins/googledrive/README.md][PlGd] |
-| OneDrive | [plugins/onedrive/README.md][PlOd] |
-| Medium | [plugins/medium/README.md][PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
-
-## Powered by
-
-**BigDigital Team: Denisov | Fadeev | Panov**
+В ходе выполнения данной лабораторной работы, я настроила Unity, Visual Studio и Jupyter Notebook для дальнейшей работы с ними. Также составила простейшие программы на Unity и Python. Ознакомилась с основными операторами языка Python на примере реализации линейной регрессии и научилась анализировать работу программы.
