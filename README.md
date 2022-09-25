@@ -43,9 +43,9 @@
 
 - Для Unity в отчете привести скриншот вывода сообщения Hello World в консоль.
 
-![image](https://user-images.githubusercontent.com/103308669/192158021-035fbda7-2e8f-415c-8ff1-1d0aecd825c1.png)
+![image_3](https://user-images.githubusercontent.com/103308669/192160340-b5c115fb-cb45-45f8-9d84-d15b51c1893f.png)
 
-![image](https://user-images.githubusercontent.com/103308669/192158024-ce2f94fd-34d7-42f2-a15f-8b4d7a9236b3.png)
+![image_4](https://user-images.githubusercontent.com/103308669/192160351-849db01b-bf08-4bee-93a0-3d7f01b3725b.png)
 
 ## Задание 2
 ### Пошагово выполнить каждый пункт раздела "ход работы" с описанием и примерами реализации задач.
@@ -65,7 +65,7 @@ y = np.array(y)
 plt.scatter(x,y)
 ```
 
-![image_5](https://user-images.githubusercontent.com/103308669/192159700-7dc567eb-9b66-4805-b615-05840c44e282.png)
+![image_5](https://user-images.githubusercontent.com/103308669/192160365-97175c22-b8dd-4f8a-b12c-3227b808381a.png)
 
 - Определите связанные функции. Функция модели: определяет модель линейной регрессии wx+b. Функция потерь: функция потерь среднеквадратичной ошибки. Функция оптимизации: метод градиентного спуска для нахождения частных производных w и b.
 
@@ -90,11 +90,11 @@ def iterate(a, b, x, y, times):
   return a,b
 ```
 
-![image](https://user-images.githubusercontent.com/103308669/192158097-d28d5220-2f48-4a22-b13d-f635bd9ccea0.png)
+![image_6](https://user-images.githubusercontent.com/103308669/192160382-e443c117-92a2-4cc2-bd9f-7c3aa8baa1c1.png)
 
 - Начать итерацию.
 
-![image](https://user-images.githubusercontent.com/103308669/192158109-f79ad15a-913a-4e36-9b05-b00823d8217f.png)
+![image_7](https://user-images.githubusercontent.com/103308669/192160395-f9c801af-e7d9-41c4-8f17-7ecc5083c7b5.png)
 
 Шаг 1. Инициализация и модель итеративной оптимизации.
 
@@ -112,7 +112,7 @@ print(a,b,loss)
 plt.scatter(x,y)
 plt.plot(x,prediction)
 ```
-![image](https://user-images.githubusercontent.com/103308669/192158147-afed4867-eebf-4086-ae81-8879a484fc7b.png)
+![image_8](https://user-images.githubusercontent.com/103308669/192160402-818e357c-e816-45a9-bdcc-722b1298e7e9.png)
 
 Шаг 2.  На второй итерации отображаются значения параметров, значения потерь и эффекты визуализации после итерации.
 
@@ -125,7 +125,7 @@ plt.scatter(x,y)
 plt.plot(x,prediction)
 ```
 
-![image](https://user-images.githubusercontent.com/103308669/192158171-dab6ecfc-a3a0-4f61-a567-c6edf2b59081.png)
+![image_9](https://user-images.githubusercontent.com/103308669/192160408-6cef4afa-56a7-49a6-ac34-49353e39ce95.png)
 
 Шаг 3. Третья итерация показывает значения параметров, значения потерь и визуализацию после итерации.
 
@@ -138,7 +138,7 @@ plt.scatter(x,y)
 plt.plot(x,prediction)
 ```
 
-![image](https://user-images.githubusercontent.com/103308669/192158203-0ffaff03-da4c-440b-9915-8411bc724cc0.png)
+![image_10](https://user-images.githubusercontent.com/103308669/192160421-224af954-294d-4070-9058-e6a26b8d0f1c.png)
 
 Шаг 4. На четвертой итерации отображаются значения параметров, значения потерь и эффекты визуализации.
 
@@ -151,7 +151,7 @@ plt.scatter(x,y)
 plt.plot(x,prediction)
 ```
 
-![image](https://user-images.githubusercontent.com/103308669/192158222-7e6b20cc-a1d0-4c39-b2f0-e7d5dda3f7ca.png)
+![image_11](https://user-images.githubusercontent.com/103308669/192160433-93eefc00-5124-4404-b354-799e49d4cb1b.png)
 
 Шаг 5. Пятая итерация показывает значение параметра, значение потерь и эффект визуализации после итерации.
 
@@ -164,7 +164,7 @@ plt.scatter(x,y)
 plt.plot(x,prediction)
 ```
 
-![image](https://user-images.githubusercontent.com/103308669/192158240-f47575ae-b6a4-484c-a3ea-302ae5817d91.png)
+![image_12](https://user-images.githubusercontent.com/103308669/192160442-24fe996d-900e-4142-9be2-3f5d84639188.png)
 
 Шаг 6. 10000-я итерация, показывающая занчения параметров, потери и визуализацию после итерации.
 
@@ -177,7 +177,7 @@ plt.scatter(x,y)
 plt.plot(x,prediction)
 ```
 
-![image](https://user-images.githubusercontent.com/103308669/192158256-145e4d0e-392b-4dda-b76c-75777d8484d5.png)
+![image_13](https://user-images.githubusercontent.com/103308669/192160450-50523846-a674-4939-bf9b-ab750f61babc.png)
 
 ## Задание 3
 ### Изучить код на Python и ответить на вопросы:
@@ -245,7 +245,7 @@ plt.scatter(x,y)
 plt.plot(x,prediction)
 ```
 
-![image](https://user-images.githubusercontent.com/103308669/192158297-435d417a-af32-4bb6-99dd-b3efd1dbc256.png)
+![image_14](https://user-images.githubusercontent.com/103308669/192160468-228f1632-7203-4212-bdca-4f23a6116b2f.png)
 
 - Какова роль параметра Lr? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ. В качестве эксперимента можете изменить значение параметра.
 
@@ -266,7 +266,7 @@ plt.scatter(x,y)
 plt.plot(x,prediction)
 ```
 
-![image](https://user-images.githubusercontent.com/103308669/192158313-9a550b1f-64ad-4f3b-8a83-cca2bc3da77c.png)
+![image_15](https://user-images.githubusercontent.com/103308669/192160474-f3df0908-8805-4c85-8dec-cbd7dec6ad0c.png)
 
 ## Выводы
 
