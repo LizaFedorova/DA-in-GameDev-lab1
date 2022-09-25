@@ -39,7 +39,7 @@
 
 ![image_1](https://user-images.githubusercontent.com/103308669/192159413-dd630c0a-9d52-4e8e-9086-41d1629a25a4.png)
 
-![image](https://user-images.githubusercontent.com/103308669/192158003-a242c358-0a70-4c68-9567-2d6d8ee73221.png)
+![image_2](https://user-images.githubusercontent.com/103308669/192161164-5d7370a1-7d1c-4b78-ab5c-7913162db4c0.png)
 
 - Для Unity в отчете привести скриншот вывода сообщения Hello World в консоль.
 
