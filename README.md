@@ -42,7 +42,7 @@
 ![image_2](https://user-images.githubusercontent.com/103308669/192161164-5d7370a1-7d1c-4b78-ab5c-7913162db4c0.png)
 
 - Для Unity в отчете привести скриншот вывода сообщения Hello World в консоль.
-Я использовала юнити версии 2022 года.
+(Я использовала юнити версии 2022 года)
 
 ![image_3](https://user-images.githubusercontent.com/103308669/192160340-b5c115fb-cb45-45f8-9d84-d15b51c1893f.png)
 
