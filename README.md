@@ -39,8 +39,9 @@
 - В облачном сервисе google console подключить API для работы с google sheets и google drive.
 
 ![image_1](https://user-images.githubusercontent.com/103308669/194856904-77b6aee9-cae4-4c05-b894-1113a5274d3b.png)
-![image_2](https://user-images.githubusercontent.com/103308669/194856943-d39078dc-dfef-4ccb-b46d-8d5f09474f05.png)
-![image_3](https://user-images.githubusercontent.com/103308669/194856969-96b89eeb-ac3f-4cde-8ad2-d3ba2b2bae32.png)
+![image_2](https://user-images.githubusercontent.com/103308669/194862279-b7ba7b84-269f-4655-857d-89c55391f05b.png)
+![image_3](https://user-images.githubusercontent.com/103308669/194862301-d2041a26-5ad4-445d-9e0f-7c09a36cc1b7.png)
+![image_13](https://user-images.githubusercontent.com/103308669/194862316-c6d155de-4dc4-4de8-84cb-c304ad1a2358.png)
 
 - Реализовать запись данных из скрипта на python в google-таблицу. Данные описывают изменение темпа инфляции на протяжении 11 отсчётных периодов, с учётом стоимости игрового объекта в каждый период.
 
