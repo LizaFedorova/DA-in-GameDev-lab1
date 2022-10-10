@@ -71,7 +71,7 @@ while i <= len(mon):
 ![image_5](https://user-images.githubusercontent.com/103308669/194857152-86e4c688-8c92-4d99-bb07-8a168212b503.png)
 ![image_6](https://user-images.githubusercontent.com/103308669/194857242-7e734f4b-f1c0-4122-ab56-4d645ba4ebe3.png)
 
-- Создать новый проект на Unity, который будет получать данные из google-таблицы, в которую были записаны данные в предыдущем пункте.
+- Создать новый проект на Unity, который будет получать данные из google-таблицы.
 
 ```c#
 using System.Collections;
@@ -113,7 +113,6 @@ public class NewBehaviourScript : MonoBehaviour
             var selectRow = parseJson[0].AsStringList;
             dataSet.Add(("Mon_" + selectRow[0]), float.Parse(selectRow[2]));
         }
-	  Debug.Log(dataSet["Mon_1"]);
     }
 ```
 
