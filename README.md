@@ -78,14 +78,18 @@ pip install tensorflow
 
 ## Задание 2
 ### Изменить параметры файла yaml-агента и определить какие параметры и как влияют на обучение модели. Описать результаты, выведенные в TensorBoard.
+
 - Попробуем изменить параметр num_layers с 2 на 3:
+
 ![image_8](https://user-images.githubusercontent.com/103308669/204276765-e8fc8c50-9182-4aab-924e-116875f858ac.png)
 ![image_9](https://user-images.githubusercontent.com/103308669/204276789-a8fc364a-4a31-4298-b743-c8a185f49ad4.png)
 
 Получим такие графики: 
+
 ![image_10](https://user-images.githubusercontent.com/103308669/204276865-43d751a2-b9b0-4a73-b412-48fa62e2fc76.png)
 
 - Изменим параметр batch_size с 1024 на 2048:
+
 ![image_11](https://user-images.githubusercontent.com/103308669/204276962-a6d9ce9b-0a32-4a9b-b3d4-91cd524ba581.png)
 ![image_12](https://user-images.githubusercontent.com/103308669/204276994-d04f85d7-2909-4d02-8af9-f11322f2c13b.png)
 
@@ -93,6 +97,7 @@ pip install tensorflow
 ![image_13](https://user-images.githubusercontent.com/103308669/204277035-27aeb253-b186-43f0-99c2-08dc8d82db01.png)
 
 - Изменим параметр epsilon с 0.2 на 0.3:
+
 ![image_14](https://user-images.githubusercontent.com/103308669/204277158-25ef01eb-27d3-41d0-8517-f89b1dc7b8a3.png)
 ![image_15](https://user-images.githubusercontent.com/103308669/204277186-0009d7b1-f422-4195-9da7-67fb2bfe9879.png)
 
@@ -100,6 +105,7 @@ pip install tensorflow
 ![image_16](https://user-images.githubusercontent.com/103308669/204277237-ead67d96-1296-493b-8489-86133fd8a419.png)
 
 - Изменим параметр lambd с 0.95 на 0.8:
+
 ![image_17](https://user-images.githubusercontent.com/103308669/204277329-9b15186c-5900-414d-8741-5d749c455a6c.png)
 ![image_18](https://user-images.githubusercontent.com/103308669/204277343-a9e06a55-0049-4edd-a18a-44d1bcb3dbad.png)
 
