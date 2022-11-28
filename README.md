@@ -112,6 +112,14 @@ pip install tensorflow
 Получим графики: 
 ![image_20](https://user-images.githubusercontent.com/103308669/204277455-12c342f8-2bc5-4464-b1a7-4bbdc7549af4.png)
 
+- Изменим параметр buffer_size с 10240 до 100:
+- 
+![image_21](https://user-images.githubusercontent.com/103308669/204294530-4155ad79-bc24-4452-be24-3dd2d9f1a8f6.png)
+![image_22](https://user-images.githubusercontent.com/103308669/204294561-6ce52a1f-fddf-460a-8909-0145d572ba63.png)
+
+Получим графики: 
+![buffer_size](https://user-images.githubusercontent.com/103308669/204294656-ab36e157-56cf-4ec0-b964-f0347c3b83b9.png)
+
 
 
 ## Выводы
