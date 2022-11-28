@@ -1,5 +1,5 @@
 # АНАЛИЗ ДАННЫХ И ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ [in GameDev]
-Отчет по лабораторной работе #2 выполнил(а):
+Отчет по лабораторной работе #5 выполнил(а):
 - Федорова Елизавета Евгеньевна
 - РИ210932
 
@@ -31,296 +31,74 @@
 - Выводы.
 
 ## Цель работы
-Познакомиться с программными средствами для организции передачи данных между инструментами google, Python и Unity.
+Интеграция экономической системы в проект Unity и обучение ML-Agent.
 
 ## Задание 1
-### Реализовать совместную работу и передачу данных в связке Python - Google-Sheets – Unity.
+### Интеграция экономической системы в проект Unity и обучение ML-Agent.
 
-- В облачном сервисе google console подключить API для работы с google sheets и google drive.
+- Откроем проект юнити:
+![image_1](https://user-images.githubusercontent.com/103308669/204274064-7e609ffa-1742-44d3-a5f2-ad2fe304e5ac.png)
 
-![image_1](https://user-images.githubusercontent.com/103308669/194856904-77b6aee9-cae4-4c05-b894-1113a5274d3b.png)
-![image_2](https://user-images.githubusercontent.com/103308669/194862279-b7ba7b84-269f-4655-857d-89c55391f05b.png)
-![image_3](https://user-images.githubusercontent.com/103308669/194862301-d2041a26-5ad4-445d-9e0f-7c09a36cc1b7.png)
-![image_13](https://user-images.githubusercontent.com/103308669/194862316-c6d155de-4dc4-4de8-84cb-c304ad1a2358.png)
+- Перед тем как перейти к началу обучения, запустим Anaconda Prompt и создадим виртуальное пространство с помощью сделующих команд:
+conda create -n MLAgents python=3.6
+conda activate MLAgents
 
-- Реализовать запись данных из скрипта на python в google-таблицу. Данные описывают изменение темпа инфляции на протяжении 11 отсчётных периодов, с учётом стоимости игрового объекта в каждый период.
+- Устанавливаем нужные библиотеки:
+pip install mlagents==0.28.0
+pip install torch~=1.7.1 -f https://download.pytorch.org/whl/torch_stable.html
 
-```py
-import gspread
-import numpy as np
-gs = gspread.service_account(filename='celestial-feat-364617-38d786a51576.json')
-sh = gs.open("UnitySheets")
-price = np.random.randint(2000, 10000, 11)
-mon = list(range(1, 11))
-i = 0
-while i <= len(mon):
-    i += 1
-    if i == 0:
-        continue
-    else:
-        tempInf = ((price[i-1]-price[i-2])/price[i-2])*100
-        tempInf = str(tempInf)
-        tempInf = tempInf.replace('.', ',')
-        sh.sheet1.update(('A' + str(i)), str(i))
-        sh.sheet1.update(('B' + str(i)), str(price[i-1]))
-        sh.sheet1.update(('C' + str(i)), str(tempInf))
-        print(tempInf)
-```
+- Далее запускаем обучение модели:
+![image_2](https://user-images.githubusercontent.com/103308669/204274918-837ff851-3805-414b-944d-0545a223cb25.png)
+![image_3](https://user-images.githubusercontent.com/103308669/204274944-506fe9d9-d66a-40f8-bf8e-e0a58f3cb221.png)
+*видос*
+Шарик начинает двигаться от одного кубика к другому.
 
-![image_4](https://user-images.githubusercontent.com/103308669/194857117-cc2e4814-f1aa-4b4b-bac8-39326e57e6c3.png)
-![image_5](https://user-images.githubusercontent.com/103308669/194857152-86e4c688-8c92-4d99-bb07-8a168212b503.png)
-![image_6](https://user-images.githubusercontent.com/103308669/194857242-7e734f4b-f1c0-4122-ab56-4d645ba4ebe3.png)
+- Чтобы ускорить процесс обучения – увеличим количество префабов TargetAreaEconomic до 12 и снова запустим обучение:
+*видос*
 
-- Создать новый проект на Unity, который будет получать данные из google-таблицы.
+- Далее построим графики для оценки результатов обучения. Для этого установим библиотеку TensorBoard с помощью следующей команды:
+pip install tensorflow
 
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
-using SimpleJSON;
+![image_4](https://user-images.githubusercontent.com/103308669/204275932-3d54dae5-3892-4202-b163-dd6c58e2b79e.png)
+![image_5](https://user-images.githubusercontent.com/103308669/204275968-54fafe7f-761f-4b71-b250-5a31d7b259ba.png)
 
-public class NewBehaviourScript : MonoBehaviour
-{
-    public AudioClip goodSpeak;
-    public AudioClip normalSpeak;
-    public AudioClip badSpeak;
-    private AudioSource selectAudio;
-    private Dictionary<string,float> dataSet = new Dictionary<string, float>();
-    private bool statusStart = false;
-    private int i = 1;
+- После завершения установки запустим TensorBoard и рассмотрим полученные графики стандартного агента:
+![image_6](https://user-images.githubusercontent.com/103308669/204276023-8af189e6-118f-4435-988a-fd7727484f35.png)
+![image_7](https://user-images.githubusercontent.com/103308669/204276045-8c6aa36e-d6b3-44c4-b1ac-42412c32ed61.png)
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(GoogleSheets());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-    IEnumerator GoogleSheets()
-    {
-        UnityWebRequest curentResp = UnityWebRequest.Get("https://sheets.googleapis.com/v4/spreadsheets/1qh1aFQZOrx29qXiso0dvL-unAp7F_1ggMiu3A-Uuyes/values/Лист1?key=AIzaSyDJNeqtiLyZai_ueRr9nKzoiZGw6vpe3pQ");
-        yield return curentResp.SendWebRequest();
-        string rawResp = curentResp.downloadHandler.text;
-        var rawJson = JSON.Parse(rawResp);
-        foreach (var itemRawJson in rawJson["values"])
-        {
-            var parseJson = JSON.Parse(itemRawJson.ToString());
-            var selectRow = parseJson[0].AsStringList;
-            dataSet.Add(("Mon_" + selectRow[0]), float.Parse(selectRow[2]));
-        }
-    }
-}
-```
-
-![image_7](https://user-images.githubusercontent.com/103308669/194857345-0a383a7a-6fa7-4ac7-8d61-ca58befefd4f.png)
-![image_8](https://user-images.githubusercontent.com/103308669/194857382-f6238e3e-fc22-4c0e-afcd-928d5dd6b871.png)
-
-- Написать функционал на Unity, в котором будет воспризводиться аудио-файл в зависимости от значения данных из таблицы.
-
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
-using SimpleJSON;
-
-public class NewBehaviourScript : MonoBehaviour
-{
-    public AudioClip goodSpeak;
-    public AudioClip normalSpeak;
-    public AudioClip badSpeak;
-    private AudioSource selectAudio;
-    private Dictionary<string,float> dataSet = new Dictionary<string, float>();
-    private bool statusStart = false;
-    private int i = 1;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(GoogleSheets());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (dataSet["Mon_" + i.ToString()] <= 10 & statusStart == false & i != dataSet.Count)
-        {
-            StartCoroutine(PlaySelectAudioGood());
-            Debug.Log(dataSet["Mon_" + i.ToString()]);
-        }
-
-        if (dataSet["Mon_" + i.ToString()] > 10 & dataSet["Mon_" + i.ToString()] < 100 & statusStart == false & i != dataSet.Count)
-        {
-            StartCoroutine(PlaySelectAudioNormal());
-            Debug.Log(dataSet["Mon_" + i.ToString()]);
-        }
-
-        if (dataSet["Mon_" + i.ToString()] >= 100 & statusStart == false & i != dataSet.Count)
-        {
-            StartCoroutine(PlaySelectAudioBad());
-            Debug.Log(dataSet["Mon_" + i.ToString()]);
-        }
-    }
-
-    IEnumerator GoogleSheets()
-    {
-        UnityWebRequest curentResp = UnityWebRequest.Get("https://sheets.googleapis.com/v4/spreadsheets/1qh1aFQZOrx29qXiso0dvL-unAp7F_1ggMiu3A-Uuyes/values/Лист1?key=AIzaSyDJNeqtiLyZai_ueRr9nKzoiZGw6vpe3pQ");
-        yield return curentResp.SendWebRequest();
-        string rawResp = curentResp.downloadHandler.text;
-        var rawJson = JSON.Parse(rawResp);
-        foreach (var itemRawJson in rawJson["values"])
-        {
-            var parseJson = JSON.Parse(itemRawJson.ToString());
-            var selectRow = parseJson[0].AsStringList;
-            dataSet.Add(("Mon_" + selectRow[0]), float.Parse(selectRow[2]));
-        }
-    }
-
-    IEnumerator PlaySelectAudioGood()
-    {
-        statusStart = true;
-        selectAudio = GetComponent<AudioSource>();
-        selectAudio.clip = goodSpeak;
-        selectAudio.Play();
-        yield return new WaitForSeconds(3);
-        statusStart = false;
-        i++;
-    }
-    IEnumerator PlaySelectAudioNormal()
-    {
-        statusStart = true;
-        selectAudio = GetComponent<AudioSource>();
-        selectAudio.clip = normalSpeak;
-        selectAudio.Play();
-        yield return new WaitForSeconds(3);
-        statusStart = false;
-        i++;
-    }
-    IEnumerator PlaySelectAudioBad()
-    {
-        statusStart = true;
-        selectAudio = GetComponent<AudioSource>();
-        selectAudio.clip = badSpeak;
-        selectAudio.Play();
-        yield return new WaitForSeconds(4);
-        statusStart = false;
-        i++;
-    }
-}
-```
-
-![image_9](https://user-images.githubusercontent.com/103308669/194857460-331b49fb-0659-4521-af53-b177cb61d3c5.png)
 
 ## Задание 2
-### Реализовать запись в Google-таблицу набора данных, полученных с помощью линейной регрессии из лабораторной работы № 1.
+### Изменить параметры файла yaml-агента и определить какие параметры и как влияют на обучение модели. Описать результаты, выведенные в TensorBoard.
+- Попробуем изменить параметр num_layers с 2 на 3:
+![image_8](https://user-images.githubusercontent.com/103308669/204276765-e8fc8c50-9182-4aab-924e-116875f858ac.png)
+![image_9](https://user-images.githubusercontent.com/103308669/204276789-a8fc364a-4a31-4298-b743-c8a185f49ad4.png)
 
-```py
-import gspread
-import numpy as np
+Получим такие графики: 
+![image_10](https://user-images.githubusercontent.com/103308669/204276865-43d751a2-b9b0-4a73-b412-48fa62e2fc76.png)
 
-def loss_function(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    return (0.5 / num) * (np.square(prediction - y)).sum()
+- Изменим параметр batch_size с 1024 на 2048:
+![image_11](https://user-images.githubusercontent.com/103308669/204276962-a6d9ce9b-0a32-4a9b-b3d4-91cd524ba581.png)
+![image_12](https://user-images.githubusercontent.com/103308669/204276994-d04f85d7-2909-4d02-8af9-f11322f2c13b.png)
 
-def model(a, b, x):
-    return a * x + b
+Получим графики:
+![image_13](https://user-images.githubusercontent.com/103308669/204277035-27aeb253-b186-43f0-99c2-08dc8d82db01.png)
 
-def optimize(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    da = (1.0 / num) * ((prediction - y) * x).sum()
-    db = (1.0 / num) * ((prediction - y).sum())
-    a = a - Lr * da
-    b = b - Lr * db
-    return a, b
+- Изменим параметр epsilon с 0.2 на 0.3:
+![image_14](https://user-images.githubusercontent.com/103308669/204277158-25ef01eb-27d3-41d0-8517-f89b1dc7b8a3.png)
+![image_15](https://user-images.githubusercontent.com/103308669/204277186-0009d7b1-f422-4195-9da7-67fb2bfe9879.png)
 
-def iterate(a, b, x, y, times):
-    for i in range(times):
-        a, b = optimize(a, b, x, y)
-    return a, b
+Получим графики:
+![image_16](https://user-images.githubusercontent.com/103308669/204277237-ead67d96-1296-493b-8489-86133fd8a419.png)
 
-gc = gspread.service_account(filename='celestial-feat-364617-38d786a51576.json')
-sh = gc.open("UnitySheets")
+- Изменим параметр lambd с 0.95 на 0.8:
+![image_17](https://user-images.githubusercontent.com/103308669/204277329-9b15186c-5900-414d-8741-5d749c455a6c.png)
+![image_18](https://user-images.githubusercontent.com/103308669/204277343-a9e06a55-0049-4edd-a18a-44d1bcb3dbad.png)
 
-x = [3, 21, 22, 34, 54, 34, 55, 67, 89, 99]
-x = np.array(x)
-y = [2, 22, 24, 65, 79, 82, 55, 130, 150, 199]
-y = np.array(y)
-a = np.random.rand(1)
-b = np.random.rand(1)
-Lr = 0.000001
-price = np.random.randint(2000, 10000, 11)
-mon = list(range(1, 11))
-i = 0
+Получим графики: 
+![image_20](https://user-images.githubusercontent.com/103308669/204277455-12c342f8-2bc5-4464-b1a7-4bbdc7549af4.png)
 
-while i <= len(mon):
-    i += 1
-    if i == 0:
-        continue
-    else:
-        a, b = iterate(a, b, x, y, 100)
-        prediction = model(a, b, x)
-        loss = loss_function(a, b, x, y)
-        tempInf = loss
-        tempInf = str(tempInf)
-        tempInf = tempInf.replace('.', ',')
-        sh.sheet1.update(('A' + str(i)), str(i))
-        sh.sheet1.update(('B' + str(i)), str(tempInf))
-        print(tempInf)
-```
 
-![image_10](https://user-images.githubusercontent.com/103308669/194857685-01d7af5b-3e72-4a18-be5b-6d6e9050622b.png)
-![image_11](https://user-images.githubusercontent.com/103308669/194857703-b46d6f91-f2c7-42cf-a161-649d639a8cf6.png)
-
-## Задание 3
-### Самостоятельно разработать сценарий воспроизведения звукового сопровождения в Unity в зависимости от изменения считанных данных в задании 2.
-Изменение диапазонов и количества колонок:
-
-```c#
-void Update()
-{
-    if (dataSet["Mon_" + i.ToString()] <= 195 & statusStart == false & i != dataSet.Count)
-    {
-        StartCoroutine(PlaySelectAudioGood());
-        Debug.Log(dataSet["Mon_" + i.ToString()]);
-    }
-
-    if (dataSet["Mon_" + i.ToString()] > 195 & dataSet["Mon_" + i.ToString()] < 500 & statusStart == false & i != dataSet.Count)
-    {
-        StartCoroutine(PlaySelectAudioNormal());
-        Debug.Log(dataSet["Mon_" + i.ToString()]);
-    }
-
-    if (dataSet["Mon_" + i.ToString()] >= 500 & statusStart == false & i != dataSet.Count)
-    {
-        StartCoroutine(PlaySelectAudioBad());
-        Debug.Log(dataSet["Mon_" + i.ToString()]);
-    }
-}
-
-IEnumerator GoogleSheets()
-{
-    UnityWebRequest curentResp = UnityWebRequest.Get("https://sheets.googleapis.com/v4/spreadsheets/1qh1aFQZOrx29qXiso0dvL-unAp7F_1ggMiu3A-Uuyes/values/Лист1?key=AIzaSyDJNeqtiLyZai_ueRr9nKzoiZGw6vpe3pQ");
-    yield return curentResp.SendWebRequest();
-    string rawResp = curentResp.downloadHandler.text;
-    var rawJson = JSON.Parse(rawResp);
-    foreach (var itemRawJson in rawJson["values"])
-    {
-        var parseJson = JSON.Parse(itemRawJson.ToString());
-        var selectRow = parseJson[0].AsStringList;
-        dataSet.Add(("Mon_" + selectRow[0]), float.Parse(selectRow[1]));
-    }
-}
-```
-
-![image_12](https://user-images.githubusercontent.com/103308669/194857787-5000b455-6d20-44c8-807d-f40aa319f074.png)
 
 ## Выводы
 
-В ходе выполнения данной лабораторной работы, я реализовала запись данных из скрипта на Python в google-таблицу. Также у меня получилось создать проект на Unity, который будет получать данные из google-таблицы и выводить их в консоль. Я написала функционал на Unity, который воспроизводит аудио-файл в зависимости от значения данных из таблицы.
+В ходе выполнения данной лабораторной работы, я научилась интегрировать экономическую систему в проект Unity в связке с MLAgent. Поняла как можно обучить ML-Агента справляться с инфляцией. Также понаблюдала за изменениями значений агентов при разных конфигурациях yaml файла.
