@@ -40,12 +40,16 @@
 ![image_1](https://user-images.githubusercontent.com/103308669/204274064-7e609ffa-1742-44d3-a5f2-ad2fe304e5ac.png)
 
 - Перед тем как перейти к началу обучения, запустим Anaconda Prompt и создадим виртуальное пространство с помощью сделующих команд:
+```
 conda create -n MLAgents python=3.6
 conda activate MLAgents
+```
 
 - Устанавливаем нужные библиотеки:
+```
 pip install mlagents==0.28.0
 pip install torch~=1.7.1 -f https://download.pytorch.org/whl/torch_stable.html
+```
 
 - Далее запускаем обучение модели:
 ![image_2](https://user-images.githubusercontent.com/103308669/204274918-837ff851-3805-414b-944d-0545a223cb25.png)
