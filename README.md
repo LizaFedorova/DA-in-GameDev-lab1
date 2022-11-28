@@ -54,14 +54,19 @@ pip install torch~=1.7.1 -f https://download.pytorch.org/whl/torch_stable.html
 - Далее запускаем обучение модели:
 ![image_2](https://user-images.githubusercontent.com/103308669/204274918-837ff851-3805-414b-944d-0545a223cb25.png)
 ![image_3](https://user-images.githubusercontent.com/103308669/204274944-506fe9d9-d66a-40f8-bf8e-e0a58f3cb221.png)
-*видос*
+
+https://user-images.githubusercontent.com/103308669/204280054-9e196b38-e355-417d-824e-91466409b0bf.mp4
+
 Шарик начинает двигаться от одного кубика к другому.
 
 - Чтобы ускорить процесс обучения – увеличим количество префабов TargetAreaEconomic до 12 и снова запустим обучение:
-*видос*
+
+https://user-images.githubusercontent.com/103308669/204280105-1be841d5-4461-4df4-b3bc-f085a7d0ac47.mp4
 
 - Далее построим графики для оценки результатов обучения. Для этого установим библиотеку TensorBoard с помощью следующей команды:
+```
 pip install tensorflow
+```
 
 ![image_4](https://user-images.githubusercontent.com/103308669/204275932-3d54dae5-3892-4202-b163-dd6c58e2b79e.png)
 ![image_5](https://user-images.githubusercontent.com/103308669/204275968-54fafe7f-761f-4b71-b250-5a31d7b259ba.png)
