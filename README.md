@@ -38,7 +38,7 @@
 
 - Для начала создадим новый проект в Unity, затем в проекте создадим пустой объект. К этому объекту прикрепим скрипт с кодом из методических указаний:
 
-```py
+```c#
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
