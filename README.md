@@ -1,5 +1,5 @@
 # АНАЛИЗ ДАННЫХ И ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ [in GameDev]
-Отчет по лабораторной работе #2 выполнил(а):
+Отчет по лабораторной работе #4 выполнил(а):
 - Федорова Елизавета Евгеньевна
 - РИ210932
 
@@ -31,295 +31,223 @@
 - Выводы.
 
 ## Цель работы
-Познакомиться с программными средствами для организции передачи данных между инструментами google, Python и Unity.
+Познакомиться с работой перцептрона на практике при помощи движка Unity. Реализовать перцептрон который умеет решать логические операции.
 
 ## Задание 1
-### Реализовать совместную работу и передачу данных в связке Python - Google-Sheets – Unity.
+### В проекте Unity реализовать перцептрон, который умеет производить вычисления: OR, AND, NAND, XOR, и дать комментарии о корректности работы.
 
-- В облачном сервисе google console подключить API для работы с google sheets и google drive.
-
-![image_1](https://user-images.githubusercontent.com/103308669/194856904-77b6aee9-cae4-4c05-b894-1113a5274d3b.png)
-![image_2](https://user-images.githubusercontent.com/103308669/194862279-b7ba7b84-269f-4655-857d-89c55391f05b.png)
-![image_3](https://user-images.githubusercontent.com/103308669/194862301-d2041a26-5ad4-445d-9e0f-7c09a36cc1b7.png)
-![image_13](https://user-images.githubusercontent.com/103308669/194862316-c6d155de-4dc4-4de8-84cb-c304ad1a2358.png)
-
-- Реализовать запись данных из скрипта на python в google-таблицу. Данные описывают изменение темпа инфляции на протяжении 11 отсчётных периодов, с учётом стоимости игрового объекта в каждый период.
+- Для начала создадим новый проект в Unity, затем в проекте создадим пустой объект. К этому объекту прикрепим скрипт с кодом из методических указаний:
 
 ```py
-import gspread
-import numpy as np
-gs = gspread.service_account(filename='celestial-feat-364617-38d786a51576.json')
-sh = gs.open("UnitySheets")
-price = np.random.randint(2000, 10000, 11)
-mon = list(range(1, 11))
-i = 0
-while i <= len(mon):
-    i += 1
-    if i == 0:
-        continue
-    else:
-        tempInf = ((price[i-1]-price[i-2])/price[i-2])*100
-        tempInf = str(tempInf)
-        tempInf = tempInf.replace('.', ',')
-        sh.sheet1.update(('A' + str(i)), str(i))
-        sh.sheet1.update(('B' + str(i)), str(price[i-1]))
-        sh.sheet1.update(('C' + str(i)), str(tempInf))
-        print(tempInf)
-```
-
-![image_4](https://user-images.githubusercontent.com/103308669/194857117-cc2e4814-f1aa-4b4b-bac8-39326e57e6c3.png)
-![image_5](https://user-images.githubusercontent.com/103308669/194857152-86e4c688-8c92-4d99-bb07-8a168212b503.png)
-![image_6](https://user-images.githubusercontent.com/103308669/194857242-7e734f4b-f1c0-4122-ab56-4d645ba4ebe3.png)
-
-- Создать новый проект на Unity, который будет получать данные из google-таблицы.
-
-```c#
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
-using SimpleJSON;
 
-public class NewBehaviourScript : MonoBehaviour
+[System.Serializable]
+public class TrainingSet
 {
-    public AudioClip goodSpeak;
-    public AudioClip normalSpeak;
-    public AudioClip badSpeak;
-    private AudioSource selectAudio;
-    private Dictionary<string,float> dataSet = new Dictionary<string, float>();
-    private bool statusStart = false;
-    private int i = 1;
+	public double[] input;
+	public double output;
+}
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(GoogleSheets());
-    }
+public class Perceptron : MonoBehaviour {
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
+	public TrainingSet[] ts;
+	double[] weights = {0,0};
+	double bias = 0;
+	double totalError = 0;
 
-    IEnumerator GoogleSheets()
-    {
-        UnityWebRequest curentResp = UnityWebRequest.Get("https://sheets.googleapis.com/v4/spreadsheets/1qh1aFQZOrx29qXiso0dvL-unAp7F_1ggMiu3A-Uuyes/values/Лист1?key=AIzaSyDJNeqtiLyZai_ueRr9nKzoiZGw6vpe3pQ");
-        yield return curentResp.SendWebRequest();
-        string rawResp = curentResp.downloadHandler.text;
-        var rawJson = JSON.Parse(rawResp);
-        foreach (var itemRawJson in rawJson["values"])
-        {
-            var parseJson = JSON.Parse(itemRawJson.ToString());
-            var selectRow = parseJson[0].AsStringList;
-            dataSet.Add(("Mon_" + selectRow[0]), float.Parse(selectRow[2]));
-        }
-    }
+	double DotProductBias(double[] v1, double[] v2) 
+	{
+		if (v1 == null || v2 == null)
+			return -1;
+	 
+		if (v1.Length != v2.Length)
+			return -1;
+	 
+		double d = 0;
+		for (int x = 0; x < v1.Length; x++)
+		{
+			d += v1[x] * v2[x];
+		}
+
+		d += bias;
+	 
+		return d;
+	}
+
+	double CalcOutput(int i)
+	{
+		double dp = DotProductBias(weights,ts[i].input);
+		if(dp > 0) return(1);
+		return (0);
+	}
+
+	void InitialiseWeights()
+	{
+		for(int i = 0; i < weights.Length; i++)
+		{
+			weights[i] = Random.Range(-1.0f,1.0f);
+		}
+		bias = Random.Range(-1.0f,1.0f);
+	}
+
+	void UpdateWeights(int j)
+	{
+		double error = ts[j].output - CalcOutput(j);
+		totalError += Mathf.Abs((float)error);
+		for(int i = 0; i < weights.Length; i++)
+		{			
+			weights[i] = weights[i] + error*ts[j].input[i]; 
+		}
+		bias += error;
+	}
+
+	double CalcOutput(double i1, double i2)
+	{
+		double[] inp = new double[] {i1, i2};
+		double dp = DotProductBias(weights,inp);
+		if(dp > 0) return(1);
+		return (0);
+	}
+
+	void Train(int epochs)
+	{
+		InitialiseWeights();
+		
+		for(int e = 0; e < epochs; e++)
+		{
+			totalError = 0;
+			for(int t = 0; t < ts.Length; t++)
+			{
+				UpdateWeights(t);
+				Debug.Log("W1: " + (weights[0]) + " W2: " + (weights[1]) + " B: " + bias);
+			}
+			Debug.Log("TOTAL ERROR: " + totalError);
+		}
+	}
+
+	void Start () {
+		Train(8);
+		Debug.Log("Test 0 0: " + CalcOutput(0,0));
+		Debug.Log("Test 0 1: " + CalcOutput(0,1));
+		Debug.Log("Test 1 0: " + CalcOutput(1,0));
+		Debug.Log("Test 1 1: " + CalcOutput(1,1));		
+	}
+	
+	void Update () {
+		
+	}
 }
 ```
 
-![image_7](https://user-images.githubusercontent.com/103308669/194857345-0a383a7a-6fa7-4ac7-8d61-ca58befefd4f.png)
-![image_8](https://user-images.githubusercontent.com/103308669/194857382-f6238e3e-fc22-4c0e-afcd-928d5dd6b871.png)
+![image_1](https://user-images.githubusercontent.com/103308669/204554810-21d0b53e-5cd4-4443-b7c7-2c7a7eacdd39.png)
+![image_2](https://user-images.githubusercontent.com/103308669/204554856-081cfa02-2c10-4f21-8e93-808061141570.png)
 
-- Написать функционал на Unity, в котором будет воспризводиться аудио-файл в зависимости от значения данных из таблицы.
+- Реализация операции OR | ИЛИ:
+Дизъюнкция - логическая операция, по своему применению максимально приближённая к союзу «или» в смысле «или то, или это, или оба сразу».
+![image](https://user-images.githubusercontent.com/103308669/204555558-48604af2-42ae-4f9f-817f-efaaa1378e5f.png)
 
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
-using SimpleJSON;
+Установим следующие значения для скрипта:
+![image_3](https://user-images.githubusercontent.com/103308669/204555637-8cbfcf37-d938-48ca-b5df-bbc8ee7a901a.png)
 
-public class NewBehaviourScript : MonoBehaviour
-{
-    public AudioClip goodSpeak;
-    public AudioClip normalSpeak;
-    public AudioClip badSpeak;
-    private AudioSource selectAudio;
-    private Dictionary<string,float> dataSet = new Dictionary<string, float>();
-    private bool statusStart = false;
-    private int i = 1;
+Для начала зададим 1 обучающую эпоху и посмотрим на результаты тестов:
+![image_4](https://user-images.githubusercontent.com/103308669/204555928-454ae457-5ea7-4100-bac7-f36d14a5c162.png)
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(GoogleSheets());
-    }
+Значение Total Error отвечает за обучение перцептрона: если оно отлично от нуля, то модель не обучилась, если же нуль - тогда модель успешно обучилась. При первой эпохе обучения значение Total Error = 2, и из результатов тестов видно, что значения отличны от истины: в первом случае, ответ 1, хотя должен быть 0.
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (dataSet["Mon_" + i.ToString()] <= 10 & statusStart == false & i != dataSet.Count)
-        {
-            StartCoroutine(PlaySelectAudioGood());
-            Debug.Log(dataSet["Mon_" + i.ToString()]);
-        }
+Далее зададим 4 эпохи обучения:
+![image_5](https://user-images.githubusercontent.com/103308669/204556134-85ab6cd5-54cb-4b13-b706-41829c163d5a.png)
+![image_6](https://user-images.githubusercontent.com/103308669/204556172-8776cd6e-ecf9-46de-a503-4ba94dbab189.png)
 
-        if (dataSet["Mon_" + i.ToString()] > 10 & dataSet["Mon_" + i.ToString()] < 100 & statusStart == false & i != dataSet.Count)
-        {
-            StartCoroutine(PlaySelectAudioNormal());
-            Debug.Log(dataSet["Mon_" + i.ToString()]);
-        }
+Можно наблюдать, что даже с 4-мя эпохами обучения значение Total Error не равно нулю.
 
-        if (dataSet["Mon_" + i.ToString()] >= 100 & statusStart == false & i != dataSet.Count)
-        {
-            StartCoroutine(PlaySelectAudioBad());
-            Debug.Log(dataSet["Mon_" + i.ToString()]);
-        }
-    }
+Повторим запуск программы.
+![image_7](https://user-images.githubusercontent.com/103308669/204556438-e7e6722a-d9b1-45cc-8eee-93f905525a76.png)
+![image_8](https://user-images.githubusercontent.com/103308669/204556466-4830269c-ccdf-4801-929b-45e3819c57e1.png)
 
-    IEnumerator GoogleSheets()
-    {
-        UnityWebRequest curentResp = UnityWebRequest.Get("https://sheets.googleapis.com/v4/spreadsheets/1qh1aFQZOrx29qXiso0dvL-unAp7F_1ggMiu3A-Uuyes/values/Лист1?key=AIzaSyDJNeqtiLyZai_ueRr9nKzoiZGw6vpe3pQ");
-        yield return curentResp.SendWebRequest();
-        string rawResp = curentResp.downloadHandler.text;
-        var rawJson = JSON.Parse(rawResp);
-        foreach (var itemRawJson in rawJson["values"])
-        {
-            var parseJson = JSON.Parse(itemRawJson.ToString());
-            var selectRow = parseJson[0].AsStringList;
-            dataSet.Add(("Mon_" + selectRow[0]), float.Parse(selectRow[2]));
-        }
-    }
+В данном случае модель обучилась за 3 эпохи и значение Total Error стало равно 0. При подстановке данных получены правильные значения, отражающие логику логического "или".
+Можем сделать вывод, что не всегда 4 эпохи обучения достаточно, бывает, что и на 4 итерации Total Error отлично от нуля и программа работает некорректно.
 
-    IEnumerator PlaySelectAudioGood()
-    {
-        statusStart = true;
-        selectAudio = GetComponent<AudioSource>();
-        selectAudio.clip = goodSpeak;
-        selectAudio.Play();
-        yield return new WaitForSeconds(3);
-        statusStart = false;
-        i++;
-    }
-    IEnumerator PlaySelectAudioNormal()
-    {
-        statusStart = true;
-        selectAudio = GetComponent<AudioSource>();
-        selectAudio.clip = normalSpeak;
-        selectAudio.Play();
-        yield return new WaitForSeconds(3);
-        statusStart = false;
-        i++;
-    }
-    IEnumerator PlaySelectAudioBad()
-    {
-        statusStart = true;
-        selectAudio = GetComponent<AudioSource>();
-        selectAudio.clip = badSpeak;
-        selectAudio.Play();
-        yield return new WaitForSeconds(4);
-        statusStart = false;
-        i++;
-    }
-}
-```
+- Реализация операции AND | И:
+Конъюнкция - логическая операция, по смыслу максимально приближенная к союзу «и».
+![image](https://user-images.githubusercontent.com/103308669/204556654-e7d5c0c0-cc27-422e-9aee-909ffc99b300.png)
 
-![image_9](https://user-images.githubusercontent.com/103308669/194857460-331b49fb-0659-4521-af53-b177cb61d3c5.png)
+Установим новые значения для скрипта:
+![image_9](https://user-images.githubusercontent.com/103308669/204556820-5fb19315-9fd2-4e2a-b95b-0477cee43e5b.png)
+
+Для начала зададим 1 обучающую эпоху и посмотрим на результаты тестов:
+![image_10](https://user-images.githubusercontent.com/103308669/204556882-8fae6faf-a9ef-4ca8-add5-a752e648d61f.png)
+
+Можно наблюдать, что 1 эпохи обучения мало для правильного обучения модели.
+
+Повторим запуск программы, только уже с 4 эпохами:
+![image_11](https://user-images.githubusercontent.com/103308669/204557039-e96f67fd-4a93-436c-9498-b61e433975df.png)
+![image_12](https://user-images.githubusercontent.com/103308669/204557070-bf5a72cc-1b02-493f-b966-2b964c9c77af.png)
+
+Такого количества эпох тоже мало для успешного обучения модели.
+Попробуем увеличить количество эпох до 6:
+![image_13](https://user-images.githubusercontent.com/103308669/204557163-0334a8e3-2b38-4442-9e15-a91be545e0fb.png)
+![image_14](https://user-images.githubusercontent.com/103308669/204557187-ace0c82d-46b8-47b4-ae4a-5f7aa71e2138.png)
+![image_15](https://user-images.githubusercontent.com/103308669/204557206-e567af22-6138-4a06-99b2-6db5f8e6c14a.png)
+
+В этот раз модель смогла обучиться за 3 эпохи, получен правильный вывод, отражающий логику логического "и".
+
+- Реализация операции NAND | инвертированный элемент И:
+NAND — это такой логический элемент NOT-AND, то есть НЕ-И. Фактически, это перевернутый вентиль И. По таблице истинности на выходе вентиля И мы получаем единицу только в случае если на оба входа тоже приходит единица. В NAND всё наоборот.
+![image](https://user-images.githubusercontent.com/103308669/204557723-65e59778-1db9-4254-a29b-fbc7c861765d.png)
+
+Установим новые значения для скрипта:
+![image_16](https://user-images.githubusercontent.com/103308669/204557891-ef755a0a-3840-4089-953b-f0aa3a83821d.png)
+
+Для начала зададим 1 обучающую эпоху и посмотрим на результаты тестов:
+![image_17](https://user-images.githubusercontent.com/103308669/204557975-9a5759dc-7a35-4a40-9b48-86dcfb48e843.png)
+
+Как и в прошлые 2 раза одной эпохи для обучения мало.
+Установим 4 эпохи обучения:
+![image_18](https://user-images.githubusercontent.com/103308669/204558049-6bfa3275-1b6c-4ad5-8150-3cc4e7506a64.png)
+![image_19](https://user-images.githubusercontent.com/103308669/204558064-48b5479b-4419-4a85-a205-b74e49bee2a6.png)
+
+В данной попытке модель обучилась за 4 эпохи и значение Total Error было равно нулю, получен правильный вывод, отражающий логику "не и".
+
+- Реализация операции XOR | исключающее ИЛИ:
+XOR — это логический оператор, работающий с битами. Если два получаемых им на входе бита одинаковы, то результат будет равен 0, в противном случае 1. При этом применяется операция исключающего или — чтобы результат был равен 1, только один аргумент должен быть равен 1.
+![image](https://user-images.githubusercontent.com/103308669/204558254-7bfdfc5c-4795-49f6-b500-cbcd79ccbef3.png)
+
+Установим новые значения для скрипта:
+![image_20](https://user-images.githubusercontent.com/103308669/204558393-a1249312-2813-48d3-91f0-53ac2503912d.png)
+
+Сразу применим 4 эпохи обучения, т.к. по предыдущим попыткам понятно, что с 1 эпохи модель не обучится:
+![image_21](https://user-images.githubusercontent.com/103308669/204558472-de1e7cf5-1547-401f-9b97-2545be5daacd.png)
+![image_22](https://user-images.githubusercontent.com/103308669/204558485-331684ac-c98c-4987-bbc5-22b0cc7fc4a4.png)
+
+При нескольких попытках четырех эпох было мало для обучения. В ходе работы с разными значениями эпох обучения было выяснено, что начиная с третьей-четвертой эпохи значение Total Error всегда было равно 4. Программа работает некорректно.
+
+Блок обработки однослойной сети персептронов способен классифицировать набор шаблонов на два класса, поскольку линейная пороговая функция определяет их линейную разделимость. И наоборот, два класса должны быть линейно разделяемыми, чтобы сеть персептрона функционировала правильно. Действительно, это основное ограничение однослойной сети персептронов.
+
+1-слойный персептрон ≡ 1-мерный разделитель, 2-слойный персептрон ≡ 2-мерный разделитель, 3-слойный персептрон ≡ 3-мерный разделитель, n слой персептрона ≡ n разделитель измерений.
+
+Следовательно, однослойный перцептрон не может обучиться этой операции, поскольку XOR не линейно-разделяемый.
+
+Можем сделать вывод, что один слой перцептрона может решать только линейные задачи, такие как AND, OR, NAND. Для решения нелинейной задачи XOR необходимо добавлять еще слои перцептронов.
 
 ## Задание 2
-### Реализовать запись в Google-таблицу набора данных, полученных с помощью линейной регрессии из лабораторной работы № 1.
+### Построить графики зависимости количества эпох от ошибки обучения. Указать от чего зависит необходимое количество эпох обучения.
+Для каждой операции было запущено 4 попытки с 8-ю эпохами обучения. На графиках указано среднее значение Total Error за 4 попытки.
+- Операция OR | ИЛИ:
+![image_23](https://user-images.githubusercontent.com/103308669/204562619-3612191f-986e-45e9-ba8b-3d39ec2f3921.png)
 
-```py
-import gspread
-import numpy as np
+- Операция AND | И:
+![image_24](https://user-images.githubusercontent.com/103308669/204562679-f4ce6bf7-7f10-40ff-bdbb-764422e2ce10.png)
 
-def loss_function(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    return (0.5 / num) * (np.square(prediction - y)).sum()
+- Операция NAND | инвертированный элемент И:
+![image_25](https://user-images.githubusercontent.com/103308669/204562808-1c94c230-1d0e-42c7-850f-68bc02576d3b.png)
 
-def model(a, b, x):
-    return a * x + b
-
-def optimize(a, b, x, y):
-    num = len(x)
-    prediction = model(a, b, x)
-    da = (1.0 / num) * ((prediction - y) * x).sum()
-    db = (1.0 / num) * ((prediction - y).sum())
-    a = a - Lr * da
-    b = b - Lr * db
-    return a, b
-
-def iterate(a, b, x, y, times):
-    for i in range(times):
-        a, b = optimize(a, b, x, y)
-    return a, b
-
-gc = gspread.service_account(filename='celestial-feat-364617-38d786a51576.json')
-sh = gc.open("UnitySheets")
-
-x = [3, 21, 22, 34, 54, 34, 55, 67, 89, 99]
-x = np.array(x)
-y = [2, 22, 24, 65, 79, 82, 55, 130, 150, 199]
-y = np.array(y)
-a = np.random.rand(1)
-b = np.random.rand(1)
-Lr = 0.000001
-price = np.random.randint(2000, 10000, 11)
-mon = list(range(1, 11))
-i = 0
-
-while i <= len(mon):
-    i += 1
-    if i == 0:
-        continue
-    else:
-        a, b = iterate(a, b, x, y, 100)
-        prediction = model(a, b, x)
-        loss = loss_function(a, b, x, y)
-        tempInf = loss
-        tempInf = str(tempInf)
-        tempInf = tempInf.replace('.', ',')
-        sh.sheet1.update(('A' + str(i)), str(i))
-        sh.sheet1.update(('B' + str(i)), str(tempInf))
-        print(tempInf)
-```
-
-![image_10](https://user-images.githubusercontent.com/103308669/194857685-01d7af5b-3e72-4a18-be5b-6d6e9050622b.png)
-![image_11](https://user-images.githubusercontent.com/103308669/194857703-b46d6f91-f2c7-42cf-a161-649d639a8cf6.png)
 
 ## Задание 3
 ### Самостоятельно разработать сценарий воспроизведения звукового сопровождения в Unity в зависимости от изменения считанных данных в задании 2.
 Изменение диапазонов и количества колонок:
 
-```c#
-void Update()
-{
-    if (dataSet["Mon_" + i.ToString()] <= 195 & statusStart == false & i != dataSet.Count)
-    {
-        StartCoroutine(PlaySelectAudioGood());
-        Debug.Log(dataSet["Mon_" + i.ToString()]);
-    }
-
-    if (dataSet["Mon_" + i.ToString()] > 195 & dataSet["Mon_" + i.ToString()] < 500 & statusStart == false & i != dataSet.Count)
-    {
-        StartCoroutine(PlaySelectAudioNormal());
-        Debug.Log(dataSet["Mon_" + i.ToString()]);
-    }
-
-    if (dataSet["Mon_" + i.ToString()] >= 500 & statusStart == false & i != dataSet.Count)
-    {
-        StartCoroutine(PlaySelectAudioBad());
-        Debug.Log(dataSet["Mon_" + i.ToString()]);
-    }
-}
-
-IEnumerator GoogleSheets()
-{
-    UnityWebRequest curentResp = UnityWebRequest.Get("https://sheets.googleapis.com/v4/spreadsheets/1qh1aFQZOrx29qXiso0dvL-unAp7F_1ggMiu3A-Uuyes/values/Лист1?key=AIzaSyDJNeqtiLyZai_ueRr9nKzoiZGw6vpe3pQ");
-    yield return curentResp.SendWebRequest();
-    string rawResp = curentResp.downloadHandler.text;
-    var rawJson = JSON.Parse(rawResp);
-    foreach (var itemRawJson in rawJson["values"])
-    {
-        var parseJson = JSON.Parse(itemRawJson.ToString());
-        var selectRow = parseJson[0].AsStringList;
-        dataSet.Add(("Mon_" + selectRow[0]), float.Parse(selectRow[1]));
-    }
-}
-```
-
-![image_12](https://user-images.githubusercontent.com/103308669/194857787-5000b455-6d20-44c8-807d-f40aa319f074.png)
 
 ## Выводы
 
