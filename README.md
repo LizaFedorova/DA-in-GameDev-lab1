@@ -190,7 +190,9 @@ public class Perceptron : MonoBehaviour {
 ![image_12](https://user-images.githubusercontent.com/103308669/204557070-bf5a72cc-1b02-493f-b966-2b964c9c77af.png)
 
 Такого количества эпох тоже мало для успешного обучения модели.
+
 Попробуем увеличить количество эпох до 6:
+
 ![image_13](https://user-images.githubusercontent.com/103308669/204557163-0334a8e3-2b38-4442-9e15-a91be545e0fb.png)
 ![image_14](https://user-images.githubusercontent.com/103308669/204557187-ace0c82d-46b8-47b4-ae4a-5f7aa71e2138.png)
 ![image_15](https://user-images.githubusercontent.com/103308669/204557206-e567af22-6138-4a06-99b2-6db5f8e6c14a.png)
